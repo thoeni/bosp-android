@@ -1,0 +1,10 @@
+.classpath
+.externalToolBuilders/
+.project
+bin/
+build.xml
+gen/
+jni/
+local.properties
+obj/
+proguard-project.txt

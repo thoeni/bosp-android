@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">BbqueActivity</string>
+  <string name="btnRegistered">isRegistered?</string>
+  <string name="btnCreate">Create</string>
+  <string name="btnStart">Start</string>
+</resources>
