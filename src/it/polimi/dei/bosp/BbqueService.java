@@ -151,6 +151,9 @@ public class BbqueService extends Service {
 	public int onRun() {
 		int cycles = EXCCycles();
 		Log.d(TAG,"onRun called, cycle: "+cycles);
+		Intent intent = new Intent("it.polimi.dei.bosp.BBQUE_INTENT");
+		intent.putExtra("ON_RUN", "onRun called, cycle: "+cycles);
+		sendBroadcast(intent);
 		try {
 			Thread.sleep(1000);
 			if (cycles > 5)

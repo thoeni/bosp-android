@@ -17,9 +17,11 @@
 package it.polimi.dei.bosp;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,13 +31,14 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class BbqueActivity extends Activity implements Runnable,
 		View.OnClickListener {
 
 	private Handler handler;
-
+	private TextView output;
 	private static final String TAG = "BbqueActivity";
 
 	/** Flag indicating whether we have called bind on the service. */
@@ -44,11 +47,17 @@ public class BbqueActivity extends Activity implements Runnable,
     /** Messenger for communicating with the service. */
     Messenger mService;
 
+    /** IntentFilter used to receive broadcast intents launched by service */
+    IntentFilter receiverFilter = new IntentFilter ();
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.main);
+		output = (TextView) findViewById(R.id.output);
 		handler = new Handler();
+		receiverFilter.addAction("it.polimi.dei.bosp.BBQUE_INTENT");
+		registerReceiver(receiver, receiverFilter);
 	}
 
 	@Override
@@ -126,6 +135,17 @@ public class BbqueActivity extends Activity implements Runnable,
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Broadcast receiver: catches messages sent by the Tutorial3Service
+	 */
+	BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String onRunIntent = intent.getStringExtra("ON_RUN");
+			output.setText(onRunIntent);
+		}
+	};
 
 	/* *
 	 * Instantiate the target - to be sent to clients - to communicate with
