@@ -20,7 +20,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp" >
-
+		
+        <Button
+	        android:id="@+id/btnRegistered"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:onClick="btnRegistered"
+	        android:text="@string/btnRegistered" />
         <Button
             android:id="@+id/btnCreate"
             android:layout_width="wrap_content"
@@ -28,21 +35,37 @@
             android:layout_weight="1"
             android:onClick="btnCreate"
             android:text="@string/btnCreate" />
+    </LinearLayout>
+	
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" >
+
+        <TextView
+	        android:id="@+id/cycles"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	     	android:layout_weight="1"
+	        android:textSize="17dp"
+	        android:text="@string/cycles"/>
+        <EditText
+	        android:id="@+id/cycles_input"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5"
+	        android:inputType="number"
+	        android:ems="2" >
+	
+	        <requestFocus />
+    	</EditText>
         <Button
             android:id="@+id/btnStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:onClick="btnStart"
             android:text="@string/btnStart" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnRegistered"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="btnRegistered"
-        android:text="@string/btnRegistered" />
-
 </LinearLayout>

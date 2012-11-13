@@ -32,6 +32,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class BbqueActivity extends Activity implements Runnable,
@@ -66,7 +67,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	protected void onStart() {
 		super.onStart();
 		// Binding to the service. This automatically starts the Service
-        bindService(new Intent(this, BbqueService.class), mConnection,
+        bindService(new Intent(this, CustomService.class), mConnection,
             Context.BIND_AUTO_CREATE);
 	}
 
@@ -111,7 +112,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	public void btnRegistered(View v) {
 		Log.d(TAG, "isRegistered button pressed...");
 		if (!mBound) return;
-		Message msg = Message.obtain(null, BbqueService.MSG_ISREGISTERED, 0, 0);
+		Message msg = Message.obtain(null, CustomService.MSG_ISREGISTERED, 0, 0);
 		try {
 			msg.replyTo = mMessenger;
 			mService.send(msg);
@@ -123,7 +124,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	public void btnCreate(View v) {
 		Log.d(TAG, "Create button pressed...");
 		if (!mBound) return;
-		Message msg = Message.obtain(null, BbqueService.MSG_CREATE, 0, 0);
+		Message msg = Message.obtain(null, CustomService.MSG_CREATE, 0, 0);
 		try {
 			msg.replyTo = mMessenger;
 			mService.send(msg);
@@ -135,7 +136,10 @@ public class BbqueActivity extends Activity implements Runnable,
 	public void btnStart(View v) {
 		Log.d(TAG, "Start button pressed...");
 		if (!mBound) return;
-		Message msg = Message.obtain(null, BbqueService.MSG_START, 0, 0);
+		Message msg = Message.obtain(null, CustomService.MSG_START, 0, 0);
+		//Get the number of iterations from the "cycle_inputs" EditText.
+		msg.arg1 = (Integer.parseInt(((EditText)findViewById(
+							R.id.cycles_input)).getText().toString()));
 		try {
 			msg.replyTo = mMessenger;
 			mService.send(msg);
@@ -152,6 +156,8 @@ public class BbqueActivity extends Activity implements Runnable,
 		public void onReceive(Context context, Intent intent) {
 			String bbqDebugIntent = intent.getStringExtra("BBQ_DEBUG");
 			output.setText(bbqDebugIntent);
+			if (intent.getIntExtra("ON_RELEASE", 0) == 1)
+				findViewById(R.id.btnStart).setEnabled(true);
 		}
 	};
 
@@ -168,13 +174,22 @@ public class BbqueActivity extends Activity implements Runnable,
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case BbqueService.MSG_ISREGISTERED:
+			case CustomService.MSG_ISREGISTERED:
 				Log.d(TAG, "isRegistered?: "+msg.arg1);
 				output.setText("isRegistered?: "+msg.arg1);
 				break;
-			case BbqueService.MSG_CREATE:
-				Log.d(TAG, "Create: "+msg.arg1);
-				output.setText("Create: "+msg.arg1);
+			case CustomService.MSG_CREATE:
+				if(msg.arg1 == 0)
+					findViewById(R.id.btnCreate).setEnabled(false);
+				Log.d(TAG, "Create return: "+msg.arg1);
+				output.setText("Create return: "+msg.arg1);
+				break;
+			case CustomService.MSG_START:
+				if(msg.arg1 == 0)
+					findViewById(R.id.btnStart).setEnabled(false);
+				Log.d(TAG, "Start return: "+msg.arg1);
+				output.setText("Start return: "+msg.arg1);
+				break;
 			default:
 				super.handleMessage(msg);
 			}

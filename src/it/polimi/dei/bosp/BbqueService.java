@@ -2,7 +2,6 @@ package it.polimi.dei.bosp;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -14,6 +13,15 @@ public class BbqueService extends Service {
 	static final String TAG = "BbqueService";
 
 	//TODO: Define as enum
+//	public static enum Msg {
+//		MSG_ISREGISTERED,
+//		MSG_CREATE,
+//		MSG_START,
+//		MSG_WAIT_COMPLETION,
+//		MSG_TERMINATE,
+//		MSG_ENABLE,
+//		MSG_DISABLE;
+//	}
 	//******* Available messages to the Service *******
 	static final int MSG_ISREGISTERED= 1;
 	static final int MSG_CREATE= 2;
@@ -49,48 +57,10 @@ public class BbqueService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return mMessenger.getBinder();
+		return null;
 	}
 
-	/* *
-	 * Instantiate the target - to be sent to clients - to communicate with
-	 * this instance of Service
-	 */
-	final Messenger mMessenger = new Messenger(new IncomingHandler());
-
-	/**
-	 * Handler of incoming messages from clients.
-	 */
-
-	class IncomingHandler extends Handler {
-
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case MSG_ISREGISTERED:
-				isRegistered(msg.replyTo);
-				break;
-			case MSG_CREATE:
-				create(msg.replyTo);
-				break;
-			case MSG_START:
-				start(msg.replyTo);
-				break;
-			case MSG_WAIT_COMPLETION:
-				break;
-			case MSG_TERMINATE:
-				break;
-			case MSG_ENABLE:
-				break;
-			case MSG_DISABLE:
-				break;
-			default:
-				super.handleMessage(msg);
-			}
-		}
-	}
-
-	private void isRegistered(Messenger dest) {
+	protected void isRegistered(Messenger dest) {
 		Log.d(TAG, "isRegistered?");
 		boolean response = EXCisRegistered();
 		Message msg = Message.obtain(null, MSG_ISREGISTERED,
@@ -102,7 +72,7 @@ public class BbqueService extends Service {
 			e.printStackTrace();
 		}
 	}
-	private void create(Messenger dest) {
+	protected void create(Messenger dest) {
 		Log.d(TAG, "create");
 		int response = EXCCreate("ABbque", "BbqRTLibTestApp");
 		Message msg = Message.obtain(null, MSG_CREATE,
@@ -114,8 +84,8 @@ public class BbqueService extends Service {
 			e.printStackTrace();
 		}
 	}
-	private void start(Messenger dest) {
-		Log.d(TAG, "start?");
+	protected void start(Messenger dest) {
+		Log.d(TAG, "start");
 		int response = EXCStart();
 		Message msg = Message.obtain(null, MSG_START,
 										response,
@@ -160,16 +130,9 @@ public class BbqueService extends Service {
 	}
 
 	public int onRun() {
-		int cycles = EXCCycles();
-		Log.d(TAG,"onRun called, cycle: "+cycles);
-		intent.putExtra("BBQ_DEBUG", "onRun called, cycle: "+cycles);
+		Log.d(TAG,"onRun called");
+		intent.putExtra("BBQ_DEBUG", "onRun called");
 		sendBroadcast(intent);
-		try {
-			Thread.sleep(1000);
-			if (cycles > 5)
-				return 1;
-		} catch (InterruptedException e) {
-		}
 		return 0;
 	}
 
