@@ -10,6 +10,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 public class BbqueService extends Service {
+
 	static final String TAG = "BbqueService";
 
 	//TODO: Define as enum
@@ -22,6 +23,8 @@ public class BbqueService extends Service {
 	static final int MSG_ENABLE= 6;
 	static final int MSG_DISABLE= 7;
 	//*************************************************
+
+	Intent intent = new Intent("it.polimi.dei.bosp.BBQUE_INTENT");
 
 	@Override
 	public void onCreate() {
@@ -130,29 +133,36 @@ public class BbqueService extends Service {
 
 	public int onSetup() {
 		Log.d(TAG,"onSetup called");
+		intent.putExtra("BBQ_DEBUG", "onSetup called");
+		sendBroadcast(intent);
 		return 0;
 	}
 
 	public int onConfigure(int awm_id) {
 		Log.d(TAG,"onConfigure called");
+		intent.putExtra("BBQ_DEBUG", "onConfigure called");
+		sendBroadcast(intent);
 		return 0;
 	}
 
 	public int onSuspend() {
 		Log.d(TAG,"onSuspend called");
+		intent.putExtra("BBQ_DEBUG", "onSuspend called");
+		sendBroadcast(intent);
 		return 0;
 	}
 
 	public int onResume() {
 		Log.d(TAG,"onResume called");
+		intent.putExtra("BBQ_DEBUG", "onRun resume called");
+		sendBroadcast(intent);
 		return 0;
 	}
 
 	public int onRun() {
 		int cycles = EXCCycles();
 		Log.d(TAG,"onRun called, cycle: "+cycles);
-		Intent intent = new Intent("it.polimi.dei.bosp.BBQUE_INTENT");
-		intent.putExtra("ON_RUN", "onRun called, cycle: "+cycles);
+		intent.putExtra("BBQ_DEBUG", "onRun called, cycle: "+cycles);
 		sendBroadcast(intent);
 		try {
 			Thread.sleep(1000);
@@ -165,11 +175,15 @@ public class BbqueService extends Service {
 
 	public int onMonitor() {
 		Log.d(TAG,"onMonitor called");
+		intent.putExtra("BBQ_DEBUG", "onMonitor called");
+		sendBroadcast(intent);
 		return 0;
 	}
 
 	public int onRelease() {
 		Log.d(TAG,"onRelease called");
+		intent.putExtra("BBQ_DEBUG", "onRelease called");
+		sendBroadcast(intent);
 		return 0;
 	}
 

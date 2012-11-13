@@ -23,10 +23,12 @@
       android:versionCode="1"
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="16" />
-    <application android:label="bbque"
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <application android:label="Barbeque"
                  android:debuggable="true">
         <activity android:name=".BbqueActivity"
-                  android:label="bbque"
+                  android:label="Barbeque"
+                  android:theme="@android:style/Theme.Holo.Light"
                   android:icon="@drawable/ic_launcher_bbq">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -32,7 +33,6 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class BbqueActivity extends Activity implements Runnable,
 		View.OnClickListener {
@@ -56,6 +56,8 @@ public class BbqueActivity extends Activity implements Runnable,
 		super.setContentView(R.layout.main);
 		output = (TextView) findViewById(R.id.output);
 		handler = new Handler();
+		//TODO: Remove tracing when not needed anymore
+		Debug.startMethodTracing();
 		receiverFilter.addAction("it.polimi.dei.bosp.BBQUE_INTENT");
 		registerReceiver(receiver, receiverFilter);
 	}
@@ -94,6 +96,12 @@ public class BbqueActivity extends Activity implements Runnable,
 	public void run() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Debug.stopMethodTracing();
 	}
 
 	/* *
@@ -142,8 +150,8 @@ public class BbqueActivity extends Activity implements Runnable,
 	BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			String onRunIntent = intent.getStringExtra("ON_RUN");
-			output.setText(onRunIntent);
+			String bbqDebugIntent = intent.getStringExtra("BBQ_DEBUG");
+			output.setText(bbqDebugIntent);
 		}
 	};
 
@@ -161,10 +169,12 @@ public class BbqueActivity extends Activity implements Runnable,
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case BbqueService.MSG_ISREGISTERED:
-				Log.d(TAG, "Registered: "+msg.arg1);
-				Toast.makeText(getApplicationContext(), "Registered: "+msg.arg1,
-						Toast.LENGTH_SHORT).show();
+				Log.d(TAG, "isRegistered?: "+msg.arg1);
+				output.setText("isRegistered?: "+msg.arg1);
 				break;
+			case BbqueService.MSG_CREATE:
+				Log.d(TAG, "Create: "+msg.arg1);
+				output.setText("Create: "+msg.arg1);
 			default:
 				super.handleMessage(msg);
 			}
