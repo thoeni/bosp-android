@@ -35,7 +35,7 @@ public class CustomService extends BbqueService {
 				isRegistered(msg.replyTo);
 				break;
 			case MSG_CREATE:
-				create(msg.replyTo);
+				create(msg.replyTo, msg.obj);
 				break;
 			case MSG_START:
 				cycle_n = msg.arg1;

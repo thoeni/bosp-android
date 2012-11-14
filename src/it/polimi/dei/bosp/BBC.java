@@ -42,8 +42,12 @@ public class BBC extends Activity implements Runnable {
 	BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			String bbqDebugIntent = intent.getStringExtra("BBQ_DEBUG");
-			console.append("> "+bbqDebugIntent+"\n");
+//			String bbqDebugIntent = intent.getStringExtra("BBQ_DEBUG");
+			String entry = String.format("> [%9d - %15s] %s \n",
+					(intent.getLongExtra("INTENT_TIMESTAMP",0)),
+					intent.getStringExtra("APP_NAME"),
+					intent.getStringExtra("BBQ_DEBUG"));
+			console.append(entry);
 			final int scrollAmount = console.getLayout().getLineTop(
 					console.getLineCount())-console.getHeight()+10;
 		    // if there is no need to scroll, scrollAmount will be <=0

@@ -32,11 +32,16 @@ public class BbqueService extends Service {
 	static final int MSG_DISABLE= 7;
 	//*************************************************
 
+	private String name;
+
 	Intent intent = new Intent("it.polimi.dei.bosp.BBQUE_INTENT");
+
+	private long creationTime = 0;
 
 	@Override
 	public void onCreate() {
 		Log.d(TAG, "onCreated");
+		creationTime = System.currentTimeMillis();
 		super.onCreate();
 		int response;
 		response = RTLIBInit("test");
@@ -72,9 +77,10 @@ public class BbqueService extends Service {
 			e.printStackTrace();
 		}
 	}
-	protected void create(Messenger dest) {
-		Log.d(TAG, "create");
-		int response = EXCCreate("ABbque", "BbqRTLibTestApp");
+	protected void create(Messenger dest, Object obj) {
+		name = obj.toString();
+		Log.d(TAG, "create, app: "+name);
+		int response = EXCCreate(name, "BbqRTLibTestApp");
 		Message msg = Message.obtain(null, MSG_CREATE,
 										response,
 										0);
@@ -104,6 +110,9 @@ public class BbqueService extends Service {
 	public int onSetup() {
 		Log.d(TAG,"onSetup called");
 		intent.putExtra("BBQ_DEBUG", "onSetup called");
+		intent.putExtra("INTENT_TIMESTAMP",
+				System.currentTimeMillis()-creationTime);
+		intent.putExtra("APP_NAME", name);
 		sendBroadcast(intent);
 		return 0;
 	}
@@ -111,6 +120,9 @@ public class BbqueService extends Service {
 	public int onConfigure(int awm_id) {
 		Log.d(TAG,"onConfigure called");
 		intent.putExtra("BBQ_DEBUG", "onConfigure called");
+		intent.putExtra("INTENT_TIMESTAMP",
+				System.currentTimeMillis()-creationTime);
+		intent.putExtra("APP_NAME", name);
 		sendBroadcast(intent);
 		return 0;
 	}
@@ -118,13 +130,19 @@ public class BbqueService extends Service {
 	public int onSuspend() {
 		Log.d(TAG,"onSuspend called");
 		intent.putExtra("BBQ_DEBUG", "onSuspend called");
+		intent.putExtra("INTENT_TIMESTAMP",
+				System.currentTimeMillis()-creationTime);
+		intent.putExtra("APP_NAME", name);
 		sendBroadcast(intent);
 		return 0;
 	}
 
 	public int onResume() {
 		Log.d(TAG,"onResume called");
-		intent.putExtra("BBQ_DEBUG", "onRun resume called");
+		intent.putExtra("BBQ_DEBUG", "onResume called");
+		intent.putExtra("INTENT_TIMESTAMP",
+				System.currentTimeMillis()-creationTime);
+		intent.putExtra("APP_NAME", name);
 		sendBroadcast(intent);
 		return 0;
 	}
@@ -132,6 +150,9 @@ public class BbqueService extends Service {
 	public int onRun() {
 		Log.d(TAG,"onRun called");
 		intent.putExtra("BBQ_DEBUG", "onRun called");
+		intent.putExtra("INTENT_TIMESTAMP",
+				System.currentTimeMillis()-creationTime);
+		intent.putExtra("APP_NAME", name);
 		sendBroadcast(intent);
 		return 0;
 	}
@@ -139,6 +160,9 @@ public class BbqueService extends Service {
 	public int onMonitor() {
 		Log.d(TAG,"onMonitor called");
 		intent.putExtra("BBQ_DEBUG", "onMonitor called");
+		intent.putExtra("INTENT_TIMESTAMP",
+				System.currentTimeMillis()-creationTime);
+		intent.putExtra("APP_NAME", name);
 		sendBroadcast(intent);
 		return 0;
 	}
@@ -146,6 +170,9 @@ public class BbqueService extends Service {
 	public int onRelease() {
 		Log.d(TAG,"onRelease called");
 		intent.putExtra("BBQ_DEBUG", "onRelease called");
+		intent.putExtra("INTENT_TIMESTAMP",
+				System.currentTimeMillis()-creationTime);
+		intent.putExtra("APP_NAME", name);
 		sendBroadcast(intent);
 		return 0;
 	}

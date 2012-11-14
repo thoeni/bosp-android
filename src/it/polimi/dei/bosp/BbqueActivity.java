@@ -41,6 +41,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	private Handler handler;
 	private TextView output;
 	private static final String TAG = "BbqueActivity";
+	private static final String APP_NAME = "ABbque";
 
 	/** Flag indicating whether we have called bind on the service. */
     boolean mBound;
@@ -125,6 +126,7 @@ public class BbqueActivity extends Activity implements Runnable,
 		Log.d(TAG, "Create button pressed...");
 		if (!mBound) return;
 		Message msg = Message.obtain(null, CustomService.MSG_CREATE, 0, 0);
+		msg.obj = APP_NAME;
 		try {
 			msg.replyTo = mMessenger;
 			mService.send(msg);
