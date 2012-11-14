@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF" >
+	
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/barbeque_broadcast_console"
+        android:padding="10dp"
+        android:textColor="#4fa5d5"
+        android:gravity="center"
+        tools:context=".BBC" />
+    
+    <TextView
+        android:id="@+id/console"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/console"
+        android:padding="10dp"
+        android:textColor="#00FF00"
+        android:maxLines = "22"
+		android:scrollbars = "vertical"
+        tools:context=".BBC" />
+
+</LinearLayout>

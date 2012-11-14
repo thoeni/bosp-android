@@ -148,6 +148,11 @@ public class BbqueActivity extends Activity implements Runnable,
 		}
 	}
 
+	public void btnConsole(View v) {
+		Log.d(TAG, "Console button pressed...");
+		startActivity(new Intent(this, BBC.class));
+	}
+
 	/**
 	 * Broadcast receiver: catches messages sent by the Tutorial3Service
 	 */

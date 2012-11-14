@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">BbqueActivity</string>
-  <string name="btnRegistered">isRegistered?</string>
-  <string name="btnCreate">Create</string>
-  <string name="btnStart">Start</string>
-  <string name="cycles">Cycles</string>
+
+    <string name="app_name">BbqueActivity</string>
+    <string name="btnRegistered">isRegistered?</string>
+    <string name="btnCreate">Create</string>
+    <string name="btnStart">Start</string>
+    <string name="cycles">Cycles</string>
+    <string name="btnConsole">Broadcast Console</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_bbc">Bbq Broadcast Console</string>
+    <string name="barbeque_broadcast_console">.:: Barbeque Broadcast Console ::.</string>
+
 </resources>

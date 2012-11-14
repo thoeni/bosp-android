@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="10dp"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="10dp" >
 
     <TextView
         android:id="@+id/output"
@@ -20,14 +20,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp" >
-		
+
         <Button
-	        android:id="@+id/btnRegistered"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:onClick="btnRegistered"
-	        android:text="@string/btnRegistered" />
+            android:id="@+id/btnRegistered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="btnRegistered"
+            android:text="@string/btnRegistered" />
+
         <Button
             android:id="@+id/btnCreate"
             android:layout_width="wrap_content"
@@ -36,30 +37,32 @@
             android:onClick="btnCreate"
             android:text="@string/btnCreate" />
     </LinearLayout>
-	
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp" >
 
         <TextView
-	        android:id="@+id/cycles"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	     	android:layout_weight="1"
-	        android:textSize="17dp"
-	        android:text="@string/cycles"/>
+            android:id="@+id/cycles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cycles"
+            android:textSize="17dp" />
+
         <EditText
-	        android:id="@+id/cycles_input"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.5"
-	        android:inputType="number"
-	        android:ems="2" >
-	
-	        <requestFocus />
-    	</EditText>
+            android:id="@+id/cycles_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:ems="2"
+            android:inputType="number" >
+
+            <requestFocus />
+        </EditText>
+
         <Button
             android:id="@+id/btnStart"
             android:layout_width="wrap_content"
@@ -68,4 +71,13 @@
             android:onClick="btnStart"
             android:text="@string/btnStart" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnConsole"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="btnConsole"
+        android:layout_marginTop="20dp"
+        android:text="@string/btnConsole" />
+
 </LinearLayout>

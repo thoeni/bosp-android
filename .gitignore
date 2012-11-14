@@ -8,3 +8,4 @@ jni/
 local.properties
 obj/
 proguard-project.txt
+libs/

@@ -19,22 +19,41 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="it.polimi.dei.bosp"
-      android:versionCode="1"
-      android:versionName="1.0">
+    package="it.polimi.dei.bosp"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
     <uses-sdk android:minSdkVersion="16" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <application android:label="Barbeque"
-                 android:debuggable="true">
-        <activity android:name=".BbqueActivity"
-                  android:label="Barbeque"
-                  android:theme="@android:style/Theme.Holo.Light"
-                  android:icon="@drawable/ic_launcher_bbq">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:debuggable="true"
+        android:label="Barbeque" >
+        <activity
+            android:name=".BbqueActivity"
+            android:icon="@drawable/ic_launcher_bbq"
+            android:label="Barbeque"
+            android:theme="@android:style/Theme.Holo.Light" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".CustomService"></service>
+
+        <service android:name=".CustomService" >
+        </service>
+
+        <activity
+            android:name=".BBC"
+            android:label="@string/title_activity_bbc"
+            android:icon="@drawable/ic_launcher_bbq"
+            android:theme="@android:style/Theme.Holo.Light" >
+            <intent-filter>
+
+            </intent-filter>
+        </activity>
     </application>
-</manifest> 
+
+</manifest>
