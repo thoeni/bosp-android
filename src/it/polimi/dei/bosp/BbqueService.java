@@ -14,25 +14,16 @@ public class BbqueService extends Service {
 	static final String TAG = "BbqueService";
 
 	//TODO: Define as enum
-//	public enum Msg {
-//		ISREGISTERED(0),
-//		CREATE(1),
-//		START(2),
-//		WAIT_COMPLETION(3),
-//		TERMINATE(4),
-//		ENABLE(5),
-//		DISABLE(6);
-//
-//		private final int messageNumber;
-//
-//		Msg(int messageNumber) {
-//			this.messageNumber = messageNumber;
-//		}
-//
-//		public int getMessageNumber() {
-//			return this.messageNumber;
-//		}
-//	}
+	public static enum Msg {
+		ISREGISTERED,
+		CREATE,
+		START,
+		WAIT_COMPLETION,
+		TERMINATE,
+		ENABLE,
+		DISABLE,
+		COUNT;
+	};
 	/******* Available messages to the Service *******/
 	static final int MSG_ISREGISTERED= 1;
 	static final int MSG_CREATE= 2;
@@ -41,6 +32,7 @@ public class BbqueService extends Service {
 	static final int MSG_TERMINATE= 5;
 	static final int MSG_ENABLE= 6;
 	static final int MSG_DISABLE= 7;
+	static final int USER_MSG= 7;
 	/*************************************************/
 
 	private String name, recipe;
@@ -125,6 +117,20 @@ public class BbqueService extends Service {
 		}
 	}
 
+	private void terminate(Messenger dest) {
+		Log.d(TAG, "terminate");
+		int response = EXCTerminate();
+		Log.d(TAG, "terminate completed, sending message...");
+		Message msg = Message.obtain(null, MSG_TERMINATE,
+										response,
+										0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Instantiate the target - to be sent to clients - to communicate with
 	 * this instance of BbqueService.
@@ -152,6 +158,7 @@ public class BbqueService extends Service {
 			case MSG_WAIT_COMPLETION:
 				break;
 			case MSG_TERMINATE:
+				terminate(msg.replyTo);
 				break;
 			case MSG_ENABLE:
 				break;
@@ -245,6 +252,8 @@ public class BbqueService extends Service {
 	public native int EXCCreate(String name, String recipe);
 
 	public native int EXCStart();
+
+	public native int EXCTerminate();
 
 	public native int EXCCycles();
 

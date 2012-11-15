@@ -40,6 +40,7 @@ public class BbqueActivity extends Activity implements Runnable,
 
 	private Handler handler;
 	private TextView output;
+	private boolean isRegistered = false;
 	private static final String TAG = "BbqueActivity";
 	private static final String APP_NAME = "ABbque";
 	private static final String APP_RECIPE = "BbqRTLibTestApp";
@@ -135,6 +136,18 @@ public class BbqueActivity extends Activity implements Runnable,
 		}
 	}
 
+	public void btnTerminate(View v) {
+		Log.d(TAG, "Terminate button pressed...");
+		if (!mBound) return;
+		Message msg = Message.obtain(null, CustomService.MSG_TERMINATE, 0, 0);
+		try {
+			msg.replyTo = mMessenger;
+			mService.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void btnStart(View v) {
 		Log.d(TAG, "Start button pressed...");
 		if (!mBound) return;
@@ -175,8 +188,10 @@ public class BbqueActivity extends Activity implements Runnable,
 		public void onReceive(Context context, Intent intent) {
 			String bbqDebugIntent = intent.getStringExtra("BBQ_DEBUG");
 			output.setText(bbqDebugIntent);
-			if (intent.getIntExtra("ON_RELEASE", 0) == 1)
+			if (intent.getIntExtra("ON_RELEASE", 0) == 1) {
 				findViewById(R.id.btnStart).setEnabled(true);
+				findViewById(R.id.btnCreate).setEnabled(true);
+			}
 		}
 	};
 
@@ -197,6 +212,7 @@ public class BbqueActivity extends Activity implements Runnable,
 			switch (msg.what) {
 			case CustomService.MSG_ISREGISTERED:
 				Log.d(TAG, "isRegistered?: "+msg.arg1);
+				isRegistered = (msg.arg1==0 ? false : true);
 				output.setText("isRegistered?: "+msg.arg1);
 				break;
 			case CustomService.MSG_CREATE:
@@ -210,6 +226,10 @@ public class BbqueActivity extends Activity implements Runnable,
 					findViewById(R.id.btnStart).setEnabled(false);
 				Log.d(TAG, "Start return: "+msg.arg1);
 				output.setText("Start return: "+msg.arg1);
+				break;
+			case CustomService.MSG_TERMINATE:
+				Log.d(TAG, "Terminate return: "+msg.arg1);
+				output.setText("Terminate return: "+msg.arg1);
 				break;
 			default:
 				super.handleMessage(msg);
