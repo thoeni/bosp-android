@@ -42,6 +42,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	private TextView output;
 	private static final String TAG = "BbqueActivity";
 	private static final String APP_NAME = "ABbque";
+	private static final String APP_RECIPE = "BbqRTLibTestApp";
 
 	/** Flag indicating whether we have called bind on the service. */
     boolean mBound;
@@ -127,7 +128,7 @@ public class BbqueActivity extends Activity implements Runnable,
 		Log.d(TAG, "Create button pressed...");
 		if (!mBound) return;
 		Message msg = Message.obtain(null, CustomService.MSG_CREATE, 0, 0);
-		msg.obj = APP_NAME;
+		msg.obj = APP_NAME+"#"+APP_RECIPE;
 		try {
 			msg.replyTo = mMessenger;
 			mService.send(msg);
@@ -139,10 +140,14 @@ public class BbqueActivity extends Activity implements Runnable,
 	public void btnStart(View v) {
 		Log.d(TAG, "Start button pressed...");
 		if (!mBound) return;
-		Message msg = Message.obtain(null, CustomService.MSG_START, 0, 0);
 		//Get the number of iterations from the "cycle_inputs" EditText.
-		msg.arg1 = (Integer.parseInt(((EditText)findViewById(
-							R.id.cycles_input)).getText().toString()));
+		String input = ((EditText)findViewById(
+				R.id.cycles_input)).getText().toString();
+		//Set the cycles number through a static method, not to use the messenger
+		CustomService.setCyclesNumber(
+				(!input.equals("") ? Integer.parseInt(input) : 0));
+		//Create a Message to call the native "EXCStart()"
+		Message msg = Message.obtain(null, CustomService.MSG_START, 0, 0);
 		try {
 			msg.replyTo = mMessenger;
 			mService.send(msg);

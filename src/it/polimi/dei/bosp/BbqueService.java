@@ -33,7 +33,7 @@ public class BbqueService extends Service {
 	static final int MSG_DISABLE= 7;
 	//*************************************************
 
-	private String name;
+	private String name, recipe;
 
 	Intent intent = new Intent("it.polimi.dei.bosp.BBQUE_INTENT");
 
@@ -63,7 +63,7 @@ public class BbqueService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return null;
+		return mMessenger.getBinder();
 	}
 
 	protected void isRegistered(Messenger dest) {
@@ -79,9 +79,12 @@ public class BbqueService extends Service {
 		}
 	}
 	protected void create(Messenger dest, Object obj) {
-		name = obj.toString();
-		Log.d(TAG, "create, app: "+name);
-		int response = EXCCreate(name, "BbqRTLibTestApp");
+		String messageString = obj.toString();
+        String params[] = messageString.split("#");
+        name = params[0];
+        recipe = params[1];
+        Log.d(TAG, "create, app: "+name+" with recipe "+recipe);
+        int response = EXCCreate(name, recipe);
 		Message msg = Message.obtain(null, MSG_CREATE,
 										response,
 										0);
@@ -104,11 +107,17 @@ public class BbqueService extends Service {
 		}
 	}
 
+	/* *
+     * Instantiate the target - to be sent to clients - to communicate with
+     * this instance of BbqueService.
+     */
+	final Messenger mMessenger = new Messenger(new BbqueMessageHandler());
+
 	/**
 	 * Handler of incoming messages from clients.
 	 */
 
-	class BbqueMessageHandler extends Handler {
+	private class BbqueMessageHandler extends Handler {
 
 		@Override
 		public void handleMessage(Message msg) {

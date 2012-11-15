@@ -48,9 +48,8 @@ public class BBC extends Activity implements Runnable {
 	BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-//			String bbqDebugIntent = intent.getStringExtra("BBQ_DEBUG");
-			String entry = String.format("> [%9d - %15s] %s \n",
-					(intent.getLongExtra("INTENT_TIMESTAMP",0)),
+			String entry = String.format("[%7.3f - %15s] %s \n",
+					((float)(intent.getLongExtra("INTENT_TIMESTAMP",0)))/1000,
 					intent.getStringExtra("APP_NAME"),
 					intent.getStringExtra("BBQ_DEBUG"));
 			console.append(entry);
