@@ -8,34 +8,38 @@ import android.util.Log;
 
 public class CustomService extends BbqueService {
 
+	/**
+	 * So far the following value overlaps with the ones defined into
+	 * BbqueService
+	 * TODO: figure out how to use enum in this case, to be extended.
+	 */
+	static final int MSG_CYCLES = 8;
+
 	private static int cycle_n = 1;
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return mMessenger.getBinder();
+		return cMessenger.getBinder();
 	}
 
-	/* *
-	 * Instantiate the target - to be sent to clients - to communicate with
-	 * this instance of CustomService.
-	 * The Messenger has to be created, from a new CustomHandler() in case
-	 * the developer wants to customize the messages, or a BbqueMessageHandler
-	 * if he's ok with the default calls.
+	/**
+	 * Instantiate the target - to be sent to clients - to communicate with this
+	 * instance of CustomService.
 	 */
-	final Messenger mMessenger = new Messenger(new CustomHandler());
+	final Messenger cMessenger = new Messenger(new CustomMessageHandler());
 
 	/**
-	 * Handler of incoming messages from clients.
-	 * This Handler overloads the BbqueMessageHandler.
+	 * Handler of incoming messages from clients. This Handler overloads the
+	 * BbqueMessageHandler.
 	 */
-	class CustomHandler extends BbqueMessageHandler {
+	class CustomMessageHandler extends BbqueMessageHandler {
 
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case MSG_START:
+			case MSG_CYCLES:
+				Log.d(TAG, "Message cycles setting: " + msg.arg1);
 				cycle_n = msg.arg1;
-				start(msg.replyTo);
 				break;
 			default:
 				super.handleMessage(msg);
@@ -43,11 +47,15 @@ public class CustomService extends BbqueService {
 		}
 	}
 
+	/**
+	 * Follow the customized implementations of callback methods "onSomething".
+	 */
+
 	@Override
 	public int onRun() {
 		int cycles = EXCCycles();
-		Log.d(TAG,"onRun called, cycle: "+cycles);
-		intent.putExtra("BBQ_DEBUG", "onRun called, cycle: "+cycles);
+		Log.d(TAG, "onRun called, cycle: " + cycles);
+		intent.putExtra("BBQ_DEBUG", "onRun called, cycle: " + cycles);
 		sendBroadcast(intent);
 		try {
 			Thread.sleep(1000);
@@ -61,7 +69,7 @@ public class CustomService extends BbqueService {
 
 	@Override
 	public int onRelease() {
-		Log.d(TAG,"onRelease called");
+		Log.d(TAG, "onRelease called");
 		intent.putExtra("BBQ_DEBUG", "onRelease called");
 		intent.putExtra("ON_RELEASE", 1);
 		sendBroadcast(intent);
