@@ -108,9 +108,7 @@ public class BbqueActivity extends Activity implements Runnable,
 		Debug.stopMethodTracing();
 	}
 
-	/* *
-	 * Buttons interacts with the Service through Messenger paradigm.
-	 */
+	/** Buttons interacts with the Service through Messenger paradigm. */
 
 	public void btnRegistered(View v) {
 		Log.d(TAG, "isRegistered button pressed...");
@@ -140,13 +138,20 @@ public class BbqueActivity extends Activity implements Runnable,
 	public void btnStart(View v) {
 		Log.d(TAG, "Start button pressed...");
 		if (!mBound) return;
+		//Prepare a message to set the number of onRun cycles to be performed
+		Message cycles = Message.obtain(null, CustomService.MSG_CYCLES, 0, 0);
 		//Get the number of iterations from the "cycle_inputs" EditText.
-		String input = ((EditText)findViewById(
-				R.id.cycles_input)).getText().toString();
-		//Set the cycles number through a static method, not to use the messenger
-		CustomService.setCyclesNumber(
-				(!input.equals("") ? Integer.parseInt(input) : 0));
-		//Create a Message to call the native "EXCStart()"
+		String input = (((EditText)findViewById(
+									R.id.cycles_input)).getText().toString());
+		//If empty, assume 0.
+		cycles.arg1 = (!input.equals("") ? Integer.parseInt(input) : 0);
+		try {
+			cycles.replyTo = mMessenger;
+			mService.send(cycles);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		//Prepare a message to call the "EXCStart" native function.
 		Message msg = Message.obtain(null, CustomService.MSG_START, 0, 0);
 		try {
 			msg.replyTo = mMessenger;
@@ -157,12 +162,13 @@ public class BbqueActivity extends Activity implements Runnable,
 	}
 
 	public void btnConsole(View v) {
-		Log.d(TAG, "Console button pressed...");
+		Log.d(TAG, "Console button pressed");
 		startActivity(new Intent(this, BBC.class));
 	}
 
 	/**
-	 * Broadcast receiver: catches messages sent by the Tutorial3Service
+	 * Broadcast receiver: catches messages sent by the BbqueService, and its
+	 * derived Services
 	 */
 	BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -174,14 +180,16 @@ public class BbqueActivity extends Activity implements Runnable,
 		}
 	};
 
-	/* *
+	/**
 	 * Instantiate the target - to be sent to clients - to communicate with
 	 * this instance of Service
 	 */
 	final Messenger mMessenger = new Messenger(new IncomingHandler());
 
 	/**
-	 * Handler of incoming messages from clients.
+	 * Handler of incoming messages from Service (typically Service responses).
+	 * The same MSG_XXX are used to receive responses regarding the calls the
+	 * activity made before.
 	 */
 	class IncomingHandler extends Handler {
 		@Override
@@ -209,9 +217,7 @@ public class BbqueActivity extends Activity implements Runnable,
 		}
 	}
 
-	/**
-	 * Class for interacting with the main interface of the service.
-	 */
+	/** Class for interacting with the main interface of the service. */
 	private final ServiceConnection mConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName className,

@@ -13,15 +13,35 @@ public class BbqueService extends Service {
 
 	static final String TAG = "BbqueService";
 
-	//******* Available messages to the Service *******
-    static final int MSG_ISREGISTERED= 1;
-    static final int MSG_CREATE= 2;
-    static final int MSG_START= 3;
-    static final int MSG_WAIT_COMPLETION= 4;
-    static final int MSG_TERMINATE= 5;
-    static final int MSG_ENABLE= 6;
-    static final int MSG_DISABLE= 7;
-    //*************************************************
+	//TODO: Define as enum
+//	public enum Msg {
+//		ISREGISTERED(0),
+//		CREATE(1),
+//		START(2),
+//		WAIT_COMPLETION(3),
+//		TERMINATE(4),
+//		ENABLE(5),
+//		DISABLE(6);
+//
+//		private final int messageNumber;
+//
+//		Msg(int messageNumber) {
+//			this.messageNumber = messageNumber;
+//		}
+//
+//		public int getMessageNumber() {
+//			return this.messageNumber;
+//		}
+//	}
+	/******* Available messages to the Service *******/
+	static final int MSG_ISREGISTERED= 1;
+	static final int MSG_CREATE= 2;
+	static final int MSG_START= 3;
+	static final int MSG_WAIT_COMPLETION= 4;
+	static final int MSG_TERMINATE= 5;
+	static final int MSG_ENABLE= 6;
+	static final int MSG_DISABLE= 7;
+	/*************************************************/
 
 	private String name, recipe;
 
@@ -64,7 +84,7 @@ public class BbqueService extends Service {
 	 * won't be overridden
 	 */
 
-	protected void isRegistered(Messenger dest) {
+	private void isRegistered(Messenger dest) {
 		Log.d(TAG, "isRegistered?");
 		boolean response = EXCisRegistered();
 		Message msg = Message.obtain(null, MSG_ISREGISTERED,
@@ -77,7 +97,7 @@ public class BbqueService extends Service {
 		}
 	}
 
-	protected void create(Messenger dest, Object obj) {
+	private void create(Messenger dest, Object obj) {
 		String messageString = obj.toString();
 		String params[] = messageString.split("#");
 		name = params[0];
@@ -94,7 +114,7 @@ public class BbqueService extends Service {
 		}
 	}
 
-	protected void start(Messenger dest) {
+	private void start(Messenger dest) {
 		Log.d(TAG, "start");
 		int response = EXCStart();
 		Message msg = Message.obtain(null, MSG_START,
