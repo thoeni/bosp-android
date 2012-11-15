@@ -36,7 +36,13 @@ public class BBC extends Activity implements Runnable {
 		handler.post(this);
 	}
 
-    /**
+    @Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		unregisterReceiver(receiver);
+	}
+
+	/**
 	 * Broadcast receiver: catches messages sent by the Tutorial3Service
 	 */
 	BroadcastReceiver receiver = new BroadcastReceiver() {

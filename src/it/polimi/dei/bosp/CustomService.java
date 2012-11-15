@@ -1,7 +1,6 @@
 package it.polimi.dei.bosp;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -18,36 +17,25 @@ public class CustomService extends BbqueService {
 
 	/* *
 	 * Instantiate the target - to be sent to clients - to communicate with
-	 * this instance of Service
+	 * this instance of CustomService.
+	 * The Messenger has to be created, from a new CustomHandler() in case
+	 * the developer wants to customize the messages, or a BbqueMessageHandler
+	 * if he's ok with the default calls.
 	 */
-	final Messenger mMessenger = new Messenger(new IncomingHandler());
+	final Messenger mMessenger = new Messenger(new CustomHandler());
 
 	/**
 	 * Handler of incoming messages from clients.
+	 * This Handler overloads the BbqueMessageHandler.
 	 */
-
-	class IncomingHandler extends Handler {
+	class CustomHandler extends BbqueMessageHandler {
 
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case MSG_ISREGISTERED:
-				isRegistered(msg.replyTo);
-				break;
-			case MSG_CREATE:
-				create(msg.replyTo, msg.obj);
-				break;
 			case MSG_START:
 				cycle_n = msg.arg1;
 				start(msg.replyTo);
-				break;
-			case MSG_WAIT_COMPLETION:
-				break;
-			case MSG_TERMINATE:
-				break;
-			case MSG_ENABLE:
-				break;
-			case MSG_DISABLE:
 				break;
 			default:
 				super.handleMessage(msg);

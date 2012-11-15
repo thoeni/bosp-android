@@ -2,6 +2,7 @@ package it.polimi.dei.bosp;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -100,6 +101,38 @@ public class BbqueService extends Service {
 			dest.send(msg);
 		} catch (RemoteException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Handler of incoming messages from clients.
+	 */
+
+	class BbqueMessageHandler extends Handler {
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case MSG_ISREGISTERED:
+				isRegistered(msg.replyTo);
+				break;
+			case MSG_CREATE:
+				create(msg.replyTo, msg.obj);
+				break;
+			case MSG_START:
+				start(msg.replyTo);
+				break;
+			case MSG_WAIT_COMPLETION:
+				break;
+			case MSG_TERMINATE:
+				break;
+			case MSG_ENABLE:
+				break;
+			case MSG_DISABLE:
+				break;
+			default:
+				super.handleMessage(msg);
+			}
 		}
 	}
 

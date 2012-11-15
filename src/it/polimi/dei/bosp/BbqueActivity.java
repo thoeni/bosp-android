@@ -81,6 +81,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		unregisterReceiver(receiver);
 		// Unbinding from the service
         if (mBound) {
             unbindService(mConnection);
