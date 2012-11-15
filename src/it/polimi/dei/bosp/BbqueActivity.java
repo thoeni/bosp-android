@@ -175,8 +175,10 @@ public class BbqueActivity extends Activity implements Runnable,
 		public void onReceive(Context context, Intent intent) {
 			String bbqDebugIntent = intent.getStringExtra("BBQ_DEBUG");
 			output.setText(bbqDebugIntent);
-			if (intent.getIntExtra("ON_RELEASE", 0) == 1)
+			if (intent.getIntExtra("ON_RELEASE", 0) == 1) {
 				findViewById(R.id.btnStart).setEnabled(true);
+				findViewById(R.id.btnCreate).setEnabled(true);
+			}
 		}
 	};
 
@@ -210,6 +212,10 @@ public class BbqueActivity extends Activity implements Runnable,
 					findViewById(R.id.btnStart).setEnabled(false);
 				Log.d(TAG, "Start return: "+msg.arg1);
 				output.setText("Start return: "+msg.arg1);
+				break;
+			case CustomService.MSG_TERMINATE:
+				Log.d(TAG, "Terminate return: "+msg.arg1);
+				output.setText("Terminate return: "+msg.arg1);
 				break;
 			default:
 				super.handleMessage(msg);

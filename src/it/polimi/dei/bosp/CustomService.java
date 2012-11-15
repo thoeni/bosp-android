@@ -73,6 +73,9 @@ public class CustomService extends BbqueService {
 		intent.putExtra("BBQ_DEBUG", "onRelease called");
 		intent.putExtra("ON_RELEASE", 1);
 		sendBroadcast(intent);
+		//Uncomment the following line to test the terminate functionality
+		//Currently it doesn't seem to work
+//		terminate(cMessenger);
 		return 0;
 	}
 

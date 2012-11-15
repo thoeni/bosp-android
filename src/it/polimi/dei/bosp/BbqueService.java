@@ -14,34 +14,39 @@ public class BbqueService extends Service {
 	static final String TAG = "BbqueService";
 
 	//TODO: Define as enum
-//	public enum Msg {
-//		ISREGISTERED(0),
-//		CREATE(1),
-//		START(2),
-//		WAIT_COMPLETION(3),
-//		TERMINATE(4),
-//		ENABLE(5),
-//		DISABLE(6);
-//
-//		private final int messageNumber;
-//
-//		Msg(int messageNumber) {
-//			this.messageNumber = messageNumber;
-//		}
-//
-//		public int getMessageNumber() {
-//			return this.messageNumber;
-//		}
+//	public static enum Msg {
+//		ISREGISTERED,
+//		CREATE,
+//		START,
+//		WAIT_COMPLETION,
+//		TERMINATE,
+//		ENABLE,
+//		DISABLE,
+//		COUNT;
 //	}
-	/******* Available messages to the Service *******/
-	static final int MSG_ISREGISTERED= 1;
-	static final int MSG_CREATE= 2;
-	static final int MSG_START= 3;
-	static final int MSG_WAIT_COMPLETION= 4;
-	static final int MSG_TERMINATE= 5;
-	static final int MSG_ENABLE= 6;
-	static final int MSG_DISABLE= 7;
-	/*************************************************/
+
+//	public static final int USER_MSG = Msg.COUNT;
+//	public static final Msg USER_MSG = Msg.COUNT;
+//
+//	/******* Available messages to the Service *******/
+//	static final int MSG_ISREGISTERED= (Msg.ISREGISTERED).ordinal();
+//	static final int MSG_CREATE= (Msg.CREATE).ordinal();
+//	static final int MSG_START= (Msg.START).ordinal();
+//	static final int MSG_WAIT_COMPLETION= (Msg.WAIT_COMPLETION).ordinal();
+//	static final int MSG_TERMINATE= (Msg.TERMINATE).ordinal();
+//	static final int MSG_ENABLE= (Msg.ENABLE).ordinal();
+//	static final int MSG_DISABLE= (Msg.DISABLE).ordinal();
+//	/*************************************************/
+
+	//******* Available messages to the Service *******
+    static final int MSG_ISREGISTERED= 1;
+    static final int MSG_CREATE= 2;
+    static final int MSG_START= 3;
+    static final int MSG_WAIT_COMPLETION= 4;
+    static final int MSG_TERMINATE= 5;
+    static final int MSG_ENABLE= 6;
+    static final int MSG_DISABLE= 7;
+    //*************************************************
 
 	private String name, recipe;
 
@@ -84,7 +89,7 @@ public class BbqueService extends Service {
 	 * won't be overridden
 	 */
 
-	private void isRegistered(Messenger dest) {
+	protected void isRegistered(Messenger dest) {
 		Log.d(TAG, "isRegistered?");
 		boolean response = EXCisRegistered();
 		Message msg = Message.obtain(null, MSG_ISREGISTERED,
