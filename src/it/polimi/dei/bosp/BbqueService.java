@@ -21,6 +21,13 @@ public class BbqueService extends Service {
     static final int MSG_TERMINATE= 5;
     static final int MSG_ENABLE= 6;
     static final int MSG_DISABLE= 7;
+    static final int MSG_GET_CH_UID= 8;
+    static final int MSG_GET_UID= 9;
+    static final int MSG_SET_CPS= 10;
+    static final int MSG_SET_CTIME_US= 11;
+    static final int MSG_CYCLES= 12;
+    static final int MSG_DONE= 13;
+    static final int MSG_CURRENT_AWM= 14;
     //*************************************************
 
 	private String name, recipe;
@@ -159,6 +166,90 @@ public class BbqueService extends Service {
 		}
 	}
 
+	protected void getChUid(Messenger dest) {
+		Log.d(TAG, "getChUid");
+		String response = EXCGetChUid();
+		Message msg = Message.obtain(null, MSG_GET_CH_UID,
+										response);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void getUid(Messenger dest) {
+		Log.d(TAG, "getUid");
+		long response = EXCGetUid();
+		Message msg = Message.obtain(null, MSG_GET_UID,
+										response);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void setCPS(Messenger dest, float cps) {
+		Log.d(TAG, "setCPS");
+		int response = EXCSetCPS(cps);
+		Message msg = Message.obtain(null, MSG_SET_CPS,
+										response, 0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void setCTimeUS(Messenger dest, int us) {
+		Log.d(TAG, "setCTimeUS");
+		int response = EXCSetCTimeUs(us);
+		Message msg = Message.obtain(null, MSG_SET_CTIME_US,
+										response, 0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void cycles(Messenger dest) {
+		Log.d(TAG, "cycles");
+		int response = EXCCycles();
+		Message msg = Message.obtain(null, MSG_CYCLES,
+										response, 0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void done(Messenger dest) {
+		Log.d(TAG, "done");
+		boolean response = EXCDone();
+		Message msg = Message.obtain(null, MSG_DONE,
+										response);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void currentAWM(Messenger dest) {
+		Log.d(TAG, "currentAWM");
+		byte response = EXCCurrentAWM();
+		Message msg = Message.obtain(null, MSG_CURRENT_AWM,
+										response, 0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Instantiate the target - to be sent to clients - to communicate with
 	 * this instance of BbqueService.
@@ -194,6 +285,27 @@ public class BbqueService extends Service {
 				break;
 			case MSG_DISABLE:
 				disable(msg.replyTo);
+				break;
+			case MSG_GET_CH_UID:
+				getChUid(msg.replyTo);
+				break;
+			case MSG_GET_UID:
+				getUid(msg.replyTo);
+				break;
+			case MSG_SET_CPS:
+				setCPS(msg.replyTo, Float.valueOf(msg.obj.toString()));
+				break;
+			case MSG_SET_CTIME_US:
+				setCTimeUS(msg.replyTo, msg.arg1);
+				break;
+			case MSG_CYCLES:
+				cycles(msg.replyTo);
+				break;
+			case MSG_DONE:
+				done(msg.replyTo);
+				break;
+			case MSG_CURRENT_AWM:
+				currentAWM(msg.replyTo);
 				break;
 			default:
 				super.handleMessage(msg);
@@ -293,6 +405,18 @@ public class BbqueService extends Service {
 	public native int EXCEnable();
 
 	public native int EXCDisable();
+
+	public native String EXCGetChUid();
+
+	public native long EXCGetUid();
+
+	public native int EXCSetCPS(float cps);
+
+	public native int EXCSetCTimeUs(int us);
+
+	public native boolean EXCDone();
+
+	public native byte EXCCurrentAWM();
 
 	/*
 	 * Load the native library
