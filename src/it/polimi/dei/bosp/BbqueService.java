@@ -13,27 +13,15 @@ public class BbqueService extends Service {
 
 	static final String TAG = "BbqueService";
 
-	//TODO: Define as enum
-	public static enum Msg {
-		ISREGISTERED,
-		CREATE,
-		START,
-		WAIT_COMPLETION,
-		TERMINATE,
-		ENABLE,
-		DISABLE,
-		COUNT;
-	};
-	/******* Available messages to the Service *******/
-	static final int MSG_ISREGISTERED= 1;
-	static final int MSG_CREATE= 2;
-	static final int MSG_START= 3;
-	static final int MSG_WAIT_COMPLETION= 4;
-	static final int MSG_TERMINATE= 5;
-	static final int MSG_ENABLE= 6;
-	static final int MSG_DISABLE= 7;
-	static final int USER_MSG= 7;
-	/*************************************************/
+	//******* Available messages to the Service *******
+    static final int MSG_ISREGISTERED= 1;
+    static final int MSG_CREATE= 2;
+    static final int MSG_START= 3;
+    static final int MSG_WAIT_COMPLETION= 4;
+    static final int MSG_TERMINATE= 5;
+    static final int MSG_ENABLE= 6;
+    static final int MSG_DISABLE= 7;
+    //*************************************************
 
 	private String name, recipe;
 
@@ -76,7 +64,7 @@ public class BbqueService extends Service {
 	 * won't be overridden
 	 */
 
-	private void isRegistered(Messenger dest) {
+	protected void isRegistered(Messenger dest) {
 		Log.d(TAG, "isRegistered?");
 		boolean response = EXCisRegistered();
 		Message msg = Message.obtain(null, MSG_ISREGISTERED,
@@ -88,7 +76,8 @@ public class BbqueService extends Service {
 			e.printStackTrace();
 		}
 	}
-	private void create(Messenger dest, Object obj) {
+
+	protected void create(Messenger dest, Object obj) {
 		String messageString = obj.toString();
 		String params[] = messageString.split("#");
 		name = params[0];
@@ -104,7 +93,8 @@ public class BbqueService extends Service {
 			e.printStackTrace();
 		}
 	}
-	private void start(Messenger dest) {
+
+	protected void start(Messenger dest) {
 		Log.d(TAG, "start");
 		int response = EXCStart();
 		Message msg = Message.obtain(null, MSG_START,
@@ -117,11 +107,49 @@ public class BbqueService extends Service {
 		}
 	}
 
-	private void terminate(Messenger dest) {
+	protected void waitCompletion(Messenger dest) {
+		Log.d(TAG, "wait completion");
+		int response = EXCWaitCompletion();
+		Message msg = Message.obtain(null, MSG_WAIT_COMPLETION,
+										response,
+										0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void terminate(Messenger dest) {
 		Log.d(TAG, "terminate");
 		int response = EXCTerminate();
-		Log.d(TAG, "terminate completed, sending message...");
 		Message msg = Message.obtain(null, MSG_TERMINATE,
+										response,
+										0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void enable(Messenger dest) {
+		Log.d(TAG, "enable");
+		int response = EXCWaitCompletion();
+		Message msg = Message.obtain(null, MSG_ENABLE,
+										response,
+										0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void disable(Messenger dest) {
+		Log.d(TAG, "disable");
+		int response = EXCWaitCompletion();
+		Message msg = Message.obtain(null, MSG_DISABLE,
 										response,
 										0);
 		try {
@@ -156,13 +184,16 @@ public class BbqueService extends Service {
 				start(msg.replyTo);
 				break;
 			case MSG_WAIT_COMPLETION:
+				waitCompletion(msg.replyTo);
 				break;
 			case MSG_TERMINATE:
 				terminate(msg.replyTo);
 				break;
 			case MSG_ENABLE:
+				enable(msg.replyTo);
 				break;
 			case MSG_DISABLE:
+				disable(msg.replyTo);
 				break;
 			default:
 				super.handleMessage(msg);
@@ -253,9 +284,15 @@ public class BbqueService extends Service {
 
 	public native int EXCStart();
 
+	public native int EXCCycles();
+
+	public native int EXCWaitCompletion();
+
 	public native int EXCTerminate();
 
-	public native int EXCCycles();
+	public native int EXCEnable();
+
+	public native int EXCDisable();
 
 	/*
 	 * Load the native library
