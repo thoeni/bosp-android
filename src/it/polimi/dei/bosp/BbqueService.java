@@ -13,25 +13,15 @@ public class BbqueService extends Service {
 
 	static final String TAG = "BbqueService";
 
-	//TODO: Define as enum
-//	public static enum Msg {
-//		MSG_ISREGISTERED,
-//		MSG_CREATE,
-//		MSG_START,
-//		MSG_WAIT_COMPLETION,
-//		MSG_TERMINATE,
-//		MSG_ENABLE,
-//		MSG_DISABLE;
-//	}
 	//******* Available messages to the Service *******
-	static final int MSG_ISREGISTERED= 1;
-	static final int MSG_CREATE= 2;
-	static final int MSG_START= 3;
-	static final int MSG_WAIT_COMPLETION= 4;
-	static final int MSG_TERMINATE= 5;
-	static final int MSG_ENABLE= 6;
-	static final int MSG_DISABLE= 7;
-	//*************************************************
+    static final int MSG_ISREGISTERED= 1;
+    static final int MSG_CREATE= 2;
+    static final int MSG_START= 3;
+    static final int MSG_WAIT_COMPLETION= 4;
+    static final int MSG_TERMINATE= 5;
+    static final int MSG_ENABLE= 6;
+    static final int MSG_DISABLE= 7;
+    //*************************************************
 
 	private String name, recipe;
 
@@ -39,6 +29,7 @@ public class BbqueService extends Service {
 
 	private long creationTime = 0;
 
+	/** Within the onCreate we initialize the RTLib */
 	@Override
 	public void onCreate() {
 		Log.d(TAG, "onCreated");
@@ -61,10 +52,17 @@ public class BbqueService extends Service {
 		Log.d(TAG, "onDestroyed");
 	}
 
+	/** Binding to the mMessenger, which is a Messenger type object, created
+	 *  starting from a "new BbqueMessageHandler()", defined some lines below */
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mMessenger.getBinder();
 	}
+
+	/**
+	 * Follow the implementation of Activity2RTLib calls. This implementation
+	 * won't be overridden
+	 */
 
 	protected void isRegistered(Messenger dest) {
 		Log.d(TAG, "isRegistered?");
@@ -78,13 +76,14 @@ public class BbqueService extends Service {
 			e.printStackTrace();
 		}
 	}
+
 	protected void create(Messenger dest, Object obj) {
 		String messageString = obj.toString();
-        String params[] = messageString.split("#");
-        name = params[0];
-        recipe = params[1];
-        Log.d(TAG, "create, app: "+name+" with recipe "+recipe);
-        int response = EXCCreate(name, recipe);
+		String params[] = messageString.split("#");
+		name = params[0];
+		recipe = params[1];
+		Log.d(TAG, "create, app: "+name+" with recipe "+recipe);
+		int response = EXCCreate(name, recipe);
 		Message msg = Message.obtain(null, MSG_CREATE,
 										response,
 										0);
@@ -94,6 +93,7 @@ public class BbqueService extends Service {
 			e.printStackTrace();
 		}
 	}
+
 	protected void start(Messenger dest) {
 		Log.d(TAG, "start");
 		int response = EXCStart();
@@ -107,17 +107,69 @@ public class BbqueService extends Service {
 		}
 	}
 
-	/* *
-     * Instantiate the target - to be sent to clients - to communicate with
-     * this instance of BbqueService.
-     */
+	protected void waitCompletion(Messenger dest) {
+		Log.d(TAG, "wait completion");
+		int response = EXCWaitCompletion();
+		Message msg = Message.obtain(null, MSG_WAIT_COMPLETION,
+										response,
+										0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void terminate(Messenger dest) {
+		Log.d(TAG, "terminate");
+		int response = EXCTerminate();
+		Message msg = Message.obtain(null, MSG_TERMINATE,
+										response,
+										0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void enable(Messenger dest) {
+		Log.d(TAG, "enable");
+		int response = EXCEnable();
+		Message msg = Message.obtain(null, MSG_ENABLE,
+										response,
+										0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void disable(Messenger dest) {
+		Log.d(TAG, "disable");
+		int response = EXCDisable();
+		Message msg = Message.obtain(null, MSG_DISABLE,
+										response,
+										0);
+		try {
+			dest.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Instantiate the target - to be sent to clients - to communicate with
+	 * this instance of BbqueService.
+	 */
 	final Messenger mMessenger = new Messenger(new BbqueMessageHandler());
 
 	/**
 	 * Handler of incoming messages from clients.
 	 */
 
-	private class BbqueMessageHandler extends Handler {
+	protected class BbqueMessageHandler extends Handler {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -132,12 +184,16 @@ public class BbqueService extends Service {
 				start(msg.replyTo);
 				break;
 			case MSG_WAIT_COMPLETION:
+				waitCompletion(msg.replyTo);
 				break;
 			case MSG_TERMINATE:
+				terminate(msg.replyTo);
 				break;
 			case MSG_ENABLE:
+				enable(msg.replyTo);
 				break;
 			case MSG_DISABLE:
+				disable(msg.replyTo);
 				break;
 			default:
 				super.handleMessage(msg);
@@ -146,7 +202,8 @@ public class BbqueService extends Service {
 	}
 
 	/**
-	 * Callback methods
+	 * Callback methods, basic implementation.
+	 * These methods are meant to be overridden by the CustomService developer.
 	 */
 
 	public int onSetup() {
@@ -228,6 +285,14 @@ public class BbqueService extends Service {
 	public native int EXCStart();
 
 	public native int EXCCycles();
+
+	public native int EXCWaitCompletion();
+
+	public native int EXCTerminate();
+
+	public native int EXCEnable();
+
+	public native int EXCDisable();
 
 	/*
 	 * Load the native library
