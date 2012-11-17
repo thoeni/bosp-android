@@ -13,31 +13,6 @@ public class BbqueService extends Service {
 
 	static final String TAG = "BbqueService";
 
-	//TODO: Define as enum
-//	public static enum Msg {
-//		ISREGISTERED,
-//		CREATE,
-//		START,
-//		WAIT_COMPLETION,
-//		TERMINATE,
-//		ENABLE,
-//		DISABLE,
-//		COUNT;
-//	}
-
-//	public static final int USER_MSG = Msg.COUNT;
-//	public static final Msg USER_MSG = Msg.COUNT;
-//
-//	/******* Available messages to the Service *******/
-//	static final int MSG_ISREGISTERED= (Msg.ISREGISTERED).ordinal();
-//	static final int MSG_CREATE= (Msg.CREATE).ordinal();
-//	static final int MSG_START= (Msg.START).ordinal();
-//	static final int MSG_WAIT_COMPLETION= (Msg.WAIT_COMPLETION).ordinal();
-//	static final int MSG_TERMINATE= (Msg.TERMINATE).ordinal();
-//	static final int MSG_ENABLE= (Msg.ENABLE).ordinal();
-//	static final int MSG_DISABLE= (Msg.DISABLE).ordinal();
-//	/*************************************************/
-
 	//******* Available messages to the Service *******
     static final int MSG_ISREGISTERED= 1;
     static final int MSG_CREATE= 2;
