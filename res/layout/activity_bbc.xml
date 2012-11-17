@@ -26,8 +26,8 @@
         android:background="@drawable/console"
         android:padding="10dp"
         android:textColor="#00FF00"
-        android:textSize="11dp"
-        android:maxLines = "27"
+        android:textSize="11sp"
+        android:maxLines = "35"
 		android:scrollbars = "vertical"
         tools:context=".BBC" />
 

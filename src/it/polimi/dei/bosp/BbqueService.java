@@ -273,6 +273,7 @@ public class BbqueService extends Service {
 				System.currentTimeMillis()-creationTime);
 		intent.putExtra("APP_NAME", name);
 		sendBroadcast(intent);
+		EXCTerminate();
 		return 0;
 	}
 

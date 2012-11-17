@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -60,7 +59,7 @@ public class BbqueActivity extends Activity implements Runnable,
 		output = (TextView) findViewById(R.id.output);
 		handler = new Handler();
 		//TODO: Remove tracing when not needed anymore
-		Debug.startMethodTracing();
+//		Debug.startMethodTracing();
 		receiverFilter.addAction("it.polimi.dei.bosp.BBQUE_INTENT");
 		registerReceiver(receiver, receiverFilter);
 	}
@@ -105,7 +104,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	@Override
 	public void onPause() {
 		super.onPause();
-		Debug.stopMethodTracing();
+//		Debug.stopMethodTracing();
 	}
 
 	/** Buttons interacts with the Service through Messenger paradigm. */
