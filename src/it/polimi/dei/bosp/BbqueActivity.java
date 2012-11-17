@@ -16,6 +16,7 @@
 
 package it.polimi.dei.bosp;
 
+import it.polimi.dei.bosp.BbqueService.Msg;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -114,7 +115,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	public void btnRegistered(View v) {
 		Log.d(TAG, "isRegistered button pressed...");
 		if (!mBound) return;
-		Message msg = Message.obtain(null, CustomService.MSG_ISREGISTERED, 0, 0);
+		Message msg = Message.obtain(null, CustomService.Msg.ISREGISTERED.ordinal(), 0, 0);
 		try {
 			msg.replyTo = mMessenger;
 			mService.send(msg);
@@ -126,7 +127,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	public void btnCreate(View v) {
 		Log.d(TAG, "Create button pressed...");
 		if (!mBound) return;
-		Message msg = Message.obtain(null, CustomService.MSG_CREATE, 0, 0);
+		Message msg = Message.obtain(null, CustomService.Msg.CREATE.ordinal(), 0, 0);
 		msg.obj = APP_NAME+"#"+APP_RECIPE;
 		try {
 			msg.replyTo = mMessenger;
@@ -139,7 +140,7 @@ public class BbqueActivity extends Activity implements Runnable,
 	public void btnTerminate(View v) {
 		Log.d(TAG, "Terminate button pressed...");
 		if (!mBound) return;
-		Message msg = Message.obtain(null, CustomService.MSG_TERMINATE, 0, 0);
+		Message msg = Message.obtain(null, CustomService.Msg.TERMINATE.ordinal(), 0, 0);
 		try {
 			msg.replyTo = mMessenger;
 			mService.send(msg);
@@ -165,7 +166,7 @@ public class BbqueActivity extends Activity implements Runnable,
 			e.printStackTrace();
 		}
 		//Prepare a message to call the "EXCStart" native function.
-		Message msg = Message.obtain(null, CustomService.MSG_START, 0, 0);
+		Message msg = Message.obtain(null, CustomService.Msg.START.ordinal(), 0, 0);
 		try {
 			msg.replyTo = mMessenger;
 			mService.send(msg);
@@ -209,25 +210,25 @@ public class BbqueActivity extends Activity implements Runnable,
 	class IncomingHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case CustomService.MSG_ISREGISTERED:
+			switch (Msg.values()[msg.what]) {
+			case ISREGISTERED:
 				Log.d(TAG, "isRegistered?: "+msg.arg1);
 				isRegistered = (msg.arg1==0 ? false : true);
 				output.setText("isRegistered?: "+msg.arg1);
 				break;
-			case CustomService.MSG_CREATE:
+			case CREATE:
 				if(msg.arg1 == 0)
 					findViewById(R.id.btnCreate).setEnabled(false);
 				Log.d(TAG, "Create return: "+msg.arg1);
 				output.setText("Create return: "+msg.arg1);
 				break;
-			case CustomService.MSG_START:
+			case START:
 				if(msg.arg1 == 0)
 					findViewById(R.id.btnStart).setEnabled(false);
 				Log.d(TAG, "Start return: "+msg.arg1);
 				output.setText("Start return: "+msg.arg1);
 				break;
-			case CustomService.MSG_TERMINATE:
+			case TERMINATE:
 				Log.d(TAG, "Terminate return: "+msg.arg1);
 				output.setText("Terminate return: "+msg.arg1);
 				break;

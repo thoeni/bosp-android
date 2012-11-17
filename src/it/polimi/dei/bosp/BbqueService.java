@@ -13,15 +13,20 @@ public class BbqueService extends Service {
 
 	static final String TAG = "BbqueService";
 
-	//******* Available messages to the Service *******
-    static final int MSG_ISREGISTERED= 1;
-    static final int MSG_CREATE= 2;
-    static final int MSG_START= 3;
-    static final int MSG_WAIT_COMPLETION= 4;
-    static final int MSG_TERMINATE= 5;
-    static final int MSG_ENABLE= 6;
-    static final int MSG_DISABLE= 7;
-    //*************************************************
+	/* *
+	 * Regarding the following implementation they say that it can be expensive
+	 * but we actually
+	 */
+	public enum Msg {
+		ISREGISTERED,
+		CREATE,
+		START,
+		WAIT_COMPLETION,
+		TERMINATE,
+		ENABLE,
+		DISABLE,
+		COUNT;
+	};
 
 	private String name, recipe;
 
@@ -67,7 +72,7 @@ public class BbqueService extends Service {
 	protected void isRegistered(Messenger dest) {
 		Log.d(TAG, "isRegistered?");
 		boolean response = EXCisRegistered();
-		Message msg = Message.obtain(null, MSG_ISREGISTERED,
+		Message msg = Message.obtain(null, Msg.ISREGISTERED.ordinal(),
 										response ? 1 : 0,
 										0);
 		try {
@@ -84,7 +89,7 @@ public class BbqueService extends Service {
 		recipe = params[1];
 		Log.d(TAG, "create, app: "+name+" with recipe "+recipe);
 		int response = EXCCreate(name, recipe);
-		Message msg = Message.obtain(null, MSG_CREATE,
+		Message msg = Message.obtain(null, Msg.CREATE.ordinal(),
 										response,
 										0);
 		try {
@@ -97,7 +102,7 @@ public class BbqueService extends Service {
 	protected void start(Messenger dest) {
 		Log.d(TAG, "start");
 		int response = EXCStart();
-		Message msg = Message.obtain(null, MSG_START,
+		Message msg = Message.obtain(null, Msg.START.ordinal(),
 										response,
 										0);
 		try {
@@ -110,7 +115,7 @@ public class BbqueService extends Service {
 	protected void waitCompletion(Messenger dest) {
 		Log.d(TAG, "wait completion");
 		int response = EXCWaitCompletion();
-		Message msg = Message.obtain(null, MSG_WAIT_COMPLETION,
+		Message msg = Message.obtain(null, Msg.WAIT_COMPLETION.ordinal(),
 										response,
 										0);
 		try {
@@ -123,7 +128,8 @@ public class BbqueService extends Service {
 	protected void terminate(Messenger dest) {
 		Log.d(TAG, "terminate");
 		int response = EXCTerminate();
-		Message msg = Message.obtain(null, MSG_TERMINATE,
+		Log.d(TAG, "terminate completed, sending message...");
+		Message msg = Message.obtain(null, Msg.TERMINATE.ordinal(),
 										response,
 										0);
 		try {
@@ -136,7 +142,7 @@ public class BbqueService extends Service {
 	protected void enable(Messenger dest) {
 		Log.d(TAG, "enable");
 		int response = EXCWaitCompletion();
-		Message msg = Message.obtain(null, MSG_ENABLE,
+		Message msg = Message.obtain(null, Msg.ENABLE.ordinal(),
 										response,
 										0);
 		try {
@@ -149,7 +155,7 @@ public class BbqueService extends Service {
 	protected void disable(Messenger dest) {
 		Log.d(TAG, "disable");
 		int response = EXCWaitCompletion();
-		Message msg = Message.obtain(null, MSG_DISABLE,
+		Message msg = Message.obtain(null, Msg.DISABLE.ordinal(),
 										response,
 										0);
 		try {
@@ -173,26 +179,25 @@ public class BbqueService extends Service {
 
 		@Override
 		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case MSG_ISREGISTERED:
+			switch (Msg.values()[msg.what]) {
+			case ISREGISTERED:
 				isRegistered(msg.replyTo);
 				break;
-			case MSG_CREATE:
+			case CREATE:
 				create(msg.replyTo, msg.obj);
 				break;
-			case MSG_START:
+			case START:
 				start(msg.replyTo);
 				break;
-			case MSG_WAIT_COMPLETION:
-				waitCompletion(msg.replyTo);
+			case WAIT_COMPLETION:
 				break;
-			case MSG_TERMINATE:
+			case TERMINATE:
 				terminate(msg.replyTo);
 				break;
-			case MSG_ENABLE:
+			case ENABLE:
 				enable(msg.replyTo);
 				break;
-			case MSG_DISABLE:
+			case DISABLE:
 				disable(msg.replyTo);
 				break;
 			default:
